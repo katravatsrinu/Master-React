@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-
+import React, { useState, useEffect, useRef } from 'react';
+import audioFile from '../../assets/audio.wav'
 function PomodoroTimer() {
   // State for the timer
   const [timeLeft, setTimeLeft] = useState(25 * 60); // Default: 25 minutes in seconds
@@ -7,8 +7,33 @@ function PomodoroTimer() {
   const [isWorkTime, setIsWorkTime] = useState(true); // Tracks if it's work or break time
 
   // State for customizable durations
-  const [workDuration, setWorkDuration] = useState(25); // Default: 25 minutes
-  const [breakDuration, setBreakDuration] = useState(5); // Default: 5 minutes
+  const [workDuration, setWorkDuration] = useState(()=>{
+    const savedWorkDuration = localStorage.getItem('workDuration');
+    return savedWorkDuration ? parseInt(savedWorkDuration,10) : 25;
+  })
+  const [breakDuration, setBreakDuration] = useState(()=>{
+    const savedBreakDuration = localStorage.getItem('breakDuration');
+    return savedBreakDuration ? parseInt(savedBreakDuration,10) : 5;
+  })
+
+  const audioRef = useRef(null);
+
+  useEffect(()=>{
+    if(timeLeft===0){
+      if(audioRef.current){
+        audioRef.current.play();
+      }
+    }
+  },[timeLeft])
+
+
+  useEffect(()=>{
+    localStorage.setItem('workDuration',workDuration.toString());
+  },[workDuration])
+
+  useEffect(()=>{
+    localStorage.setItem('breakDuration',breakDuration.toString());
+  },[breakDuration])
 
   // useEffect to handle the countdown
   useEffect(() => {
@@ -83,7 +108,7 @@ function PomodoroTimer() {
         {isActive ? 'Pause' : 'Start'}
       </button>
       <button onClick={resetTimer}>Reset</button>
-
+      <audio ref={audioRef} src={audioFile} preload='auto' />
       <div>
         <label>
           Work Duration (minutes):

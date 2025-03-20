@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Promodoro from "./components/tasks/Promodoro";
+import SearchFunctionality from "./components/apiFetch/SearchFunctionality";
+// import Promodoro from "./components/tasks/Promodoro";
 
 
 
@@ -8,7 +9,8 @@ function App() {
   return (
     <div>
 
-      <Promodoro />
+      {/* <Promodoro /> */}
+      <SearchFunctionality />
 
     </div>
   );
